@@ -1,6 +1,7 @@
 import uvicorn
 import sys
 import subprocess
+import gunicorn
 
 command = [
     sys.executable,
@@ -11,7 +12,17 @@ command = [
     'requirements.txt',
 ]
 
+command2 = [
+    'gunicorn',
+    'main:app',
+    '--workers',
+    '4',
+    '--worker-class',
+    'uvicorn.workers.UvicornWorker',
+    '--bind',
+    '0.0.0.0:80'
+]
+
 subprocess.check_call(command)
 
-uvicorn.run("main:app", host="0.0.0.0", port=8000, reload=False, log_level="debug",
-                workers=1, limit_concurrency=1, limit_max_requests=1)
+subprocess.check_call(command2)
